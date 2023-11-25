@@ -23,7 +23,7 @@ import warnings
 warnings.filterwarnings('ignore')  # Ignore warnings during execution for cleaner output
 
 st.title('Resale Price Prediction for Singapore Flats')
-st.write("Welcome to the Singapore Resale Price Predictor! This application is designed to help you estimate "
+st.write("Welcome to the Singapore Flat Resale Price Predictor! This application is designed to help you estimate "
     "the resale price of a flat based on historical transaction data. Simply input the details of the flat, "
     "and let the machine learning model provide you with an estimated resale price.")
 st.sidebar.header('Enter Values')
@@ -57,7 +57,7 @@ def user_input():
 
     features = pd.DataFrame(user_data,index=[0])
     return features
-
+user_submit = st.sidebar.button('Submit')
 # ML Model
 def ml_model():
     house_ml = pd.read_csv('https://raw.githubusercontent.com/VivekS-DS/Resale-Price-Prediction-for-Singapore-Flats/main/sing_house_price_cleaned.csv')
@@ -78,7 +78,7 @@ def ml_model():
     rf_test_pred = model_rf.predict(x_test)
     return model_rf
 
-user_submit = st.sidebar.button('Submit')
+
 
 model = ml_model()
 input_df = user_input()
@@ -86,6 +86,6 @@ input_df = user_input()
 # applying the model to make prediction
 if user_submit == True:
     st.write('User Input', input_df)
-    predict_price = model.predict(input_df)
+    predict_price = model_rf.predict(input_df)
     st.write('Resale Value','S$',predict_price)
 
