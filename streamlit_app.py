@@ -57,7 +57,9 @@ def user_input():
 
     features = pd.DataFrame(user_data,index=[0])
     return features
-user_submit = st.sidebar.button('Submit')
+
+
+
 # ML Model
 def ml_model():
     house_ml = pd.read_csv('https://raw.githubusercontent.com/VivekS-DS/Resale-Price-Prediction-for-Singapore-Flats/main/sing_house_price_cleaned.csv')
@@ -79,8 +81,8 @@ def ml_model():
     return model_rf
 
 
-
 model = ml_model()
+user_submit = st.sidebar.button('Submit')
 input_df = user_input()
 
 # applying the model to make prediction
