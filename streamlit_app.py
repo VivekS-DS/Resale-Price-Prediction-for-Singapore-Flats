@@ -82,11 +82,12 @@ def ml_model():
 
 input_df = user_input()
 user_submit = st.sidebar.button('Submit')
-model = ml_model()
+
 
 # applying the model to make prediction
 if user_submit == True:
     st.write('User Input', input_df)
+    model = ml_model()
     predict_price = model.predict(input_df)
     st.write('Resale Value','S$',predict_price)
 
