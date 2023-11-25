@@ -81,9 +81,8 @@ def ml_model():
     return model_rf
 
 input_df = user_input()
-model = ml_model()
 user_submit = st.sidebar.button('Submit')
-
+model = ml_model()
 
 # applying the model to make prediction
 if user_submit == True:
