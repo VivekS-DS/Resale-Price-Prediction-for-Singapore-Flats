@@ -1,17 +1,33 @@
 import pickle
 import streamlit as st
+# Import Pandas for data manipulation
 import pandas as pd
+# Import NumPy for numerical operations
 import numpy as np
+# For composing transformers for different data types
+from sklearn.compose import make_column_transformer
+# For building a machine learning pipeline
+from sklearn.pipeline import Pipeline
+# For preprocessing data
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+# For using a Random Forest Regressor model
+from sklearn.ensemble import RandomForestRegressor
+# For using a Decision Tree Regressor
+from sklearn.tree import DecisionTreeRegressor
+# For splitting data into training and testing sets
+from sklearn.model_selection import train_test_split
+# For evaluating the model performance
+from sklearn.metrics import mean_squared_error,r2_score, mean_absolute_error
+# Import warnings module to suppress unnecessary warnings
+import warnings
+warnings.filterwarnings('ignore')  # Ignore warnings during execution for cleaner output
 
 st.title('Resale Price Prediction for Singapore Flats')
 st.write("Welcome to the Singapore Resale Price Predictor! This application is designed to help you estimate "
     "the resale price of a flat based on historical transaction data. Simply input the details of the flat, "
     "and let the machine learning model provide you with an estimated resale price.")
-
 st.sidebar.header('Enter Values')
-
 # Get the User Input
-
 def user_input():
     town = st.sidebar.selectbox('Town',('ANG MO KIO', 'BEDOK', 'BISHAN', 'BUKIT BATOK', 'BUKIT MERAH',
                                 'BUKIT PANJANG', 'BUKIT TIMAH', 'CENTRAL AREA', 'CHOA CHU KANG',
@@ -42,14 +58,34 @@ def user_input():
     features = pd.DataFrame(user_data,index=[0])
     return features
 
-input_df = user_input()
+# ML Model
+def ml_model():
+    house_ml = pd.read_csv('https://raw.githubusercontent.com/VivekS-DS/Resale-Price-Prediction-for-Singapore-Flats/main/sing_house_price_cleaned.csv')
+    X = house_ml.drop('resale_price', axis=1)
+    Y = house_ml['resale_price']
+    # Splitting the dataset into training and testing sets
+    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+    # ColumnTransformer
+    ct = make_column_transformer((StandardScaler(), ['floor_area_sqm', 'flat_age_months', 'lease_exp']),
+                                     (OneHotEncoder(), ['town', 'flat_type', 'storey_range', 'flat_model']),
+                                     remainder="drop"  # all other columns in X will be dropped.
+                                     )
+    # Create a pipeline with the ColumnTransformer and a model
+    model_rf = Pipeline(steps=[('processor', ct),
+                                   ('regressor', RandomForestRegressor())])
+    model_rf.fit(x_train, y_train)
+    rf_train_pred = model_rf.predict(x_train)
+    rf_test_pred = model_rf.predict(x_test)
+    return model_rf
+
 user_submit = st.sidebar.button('Submit')
+
+model = ml_model()
+input_df = user_input()
 
 # applying the model to make prediction
 if user_submit == True:
-    # Read the random forest regression ML model
-    house_price = pickle.load(open('singapore_house_resale_price_prediction.pkl', 'rb'))
     st.write('User Input', input_df)
-    predict_price = house_price.predict(input_df)
+    predict_price = model.predict(input_df)
     st.write('Resale Value','S$',predict_price)
 
