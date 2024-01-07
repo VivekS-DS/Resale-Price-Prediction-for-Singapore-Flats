@@ -39,3 +39,9 @@ Preprocess the data to clean and structure it for machine learning.
 ### 7. Testing and Validation:
 
 * Thoroughly test the deployed application to ensure it functions correctly and provides accurate predictions.
+
+
+## **Streamlit App Link :** [Singapore  Resale Flat Prices Predicting](https://resale-price-prediction-for-flats-in-singapore.streamlit.app/)
+
+![image](https://github.com/VivekS-DS/Resale-Price-Prediction-for-Singapore-Flats/assets/141803391/d65f71e0-a4a4-4196-8acb-2e9f65e52207)
+
